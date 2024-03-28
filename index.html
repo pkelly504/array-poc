@@ -18,22 +18,29 @@
         efx="false"
     /> -->
 
-    <array-credit-overview
-        appKey="3FEED6B2-9232-4569-8AA9-FBB777E627BF"
-        sandbox="true"
-        userToken="4AE46297-5E81-4CB3-86FA-AC867CC2FD52"
-        creditAlertsLink="google.com"
-        creditReportLink="google.com"
-        debtAnalysisLink="google.com"
-        identityProtectLink="google.com"
-        scoreFactorsLink="google.com"
-        scoreSimulatorLink="google.com"
-        settingsLink="google.com"
-        helloPrivacyLink="google.com"
-    />
-
     <script>
         window.addEventListener('array-event', (e) => console.log(e.detail));
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('userToken');
+
+        if (token) {
+            document.querySelector('body').innerHTML(`
+              <array-credit-overview
+                  appKey="3FEED6B2-9232-4569-8AA9-FBB777E627BF"
+                  sandbox="true"
+                  userToken="${token}"
+                  creditAlertsLink="#creditAlerts"
+                  creditReportLink="#creditReportLink"
+                  debtAnalysisLink="#debtAnalysisLink"
+                  identityProtectLink="#identityProtectLink"
+                  scoreFactorsLink="#scoreFactorsLink"
+                  scoreSimulatorLink="#scoreSimulatorLink"
+                  settingsLink="#settingsLink"
+                  helloPrivacyLink="#helloPrivacyLink"
+              />
+          `);
+        }
     </script>
   </body>
 </html>
