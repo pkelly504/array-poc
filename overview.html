@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Array</title>
+    <script src="https://embed.sandbox.array.io/cms/array-web-component.js"></script>
+    <script src="https://embed.sandbox.array.io/cms/array-credit-overview.js?appKey=3FEED6B2-9232-4569-8AA9-FBB777E627BF"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+
+    <script>
+        window.addEventListener('array-event', (e) => console.log(e.detail));
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('userToken');
+
+        if (token) {
+            document.body.innerHTML = `
+              <array-credit-overview
+                  appKey="3FEED6B2-9232-4569-8AA9-FBB777E627BF"
+                  sandbox="true"
+                  userToken="${token}"
+                  creditAlertsLink="#creditAlerts"
+                  creditReportLink="#creditReportLink"
+                  debtAnalysisLink="#debtAnalysisLink"
+                  identityProtectLink="#identityProtectLink"
+                  scoreFactorsLink="#scoreFactorsLink"
+                  scoreSimulatorLink="#scoreSimulatorLink"
+                  settingsLink="#settingsLink"
+                  helloPrivacyLink="#helloPrivacyLink"
+              />
+          `;
+        }
+    </script>
+  </body>
+</html>
