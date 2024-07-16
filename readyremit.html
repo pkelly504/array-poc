@@ -1,0 +1,80 @@
+<html>
+<head>
+    <title>ReadyRemit</title>
+</head>
+
+<body>
+    <iframe id="readyremit-iframe" src="https://sandbox-sdk.readyremit.com" width="100%" height="1000px"
+        style="border:none" title="International & Domestic Transfers">
+    </iframe>
+    <script>
+        const searchParams = new URLSearchParams(window.location.search);
+        const readyRemitSdkUrl = "https://sandbox-sdk.readyremit.com";
+
+        const senderId = searchParams.get('senderId') ?? "f2ba9d99-253f-4a40-a1a5-fb9c1ebc3b76";
+        const authToken = searchParams.get('authToken');
+
+        const iframe = document.getElementById("readyremit-iframe");
+
+        window.addEventListener("message", async (event) => {
+            console.log({ event });
+
+            if (event.origin != readyRemitSdkUrl) {
+                return;
+            }
+
+            if (event.data?.type === "readyremit-unload-iframe") {
+                console.log('timeout');
+            }
+
+            if (event.data?.type === "readyremit-create-transfer") {
+                try {
+                    console.log('create transfer', event.data.payload);
+                    let transferId = "1234567890";
+
+                    iframe.contentWindow.postMessage({
+                        type: "readyremit-transfer-completed",
+                        payload: {
+                            transferId: transferId,
+                        },
+                    }, event.origin);
+                } catch (error) {
+                    console.error({ error })
+
+                    iframe.contentWindow.postMessage({
+                        type: "readyremit-transfer-failed",
+                        payload: {
+                            error: error.response.data,
+                        }
+                    }, event.origin);
+                }
+            }
+        }, false);
+
+        const initializeReadyRemitIFrame = () => {
+            iframe.contentWindow.postMessage({
+                type: "readyremit-form-submission",
+                payload: {
+                    formCore: {
+                        baseURL: "https://sandbox-api.readyremit.com/v1",
+                        sdkURL: readyRemitSdkUrl,
+                        senderId: senderId,
+                        token: authToken
+                    },
+                    formColors: {
+                        brandPrimary: "#934ae0"
+                    },
+                    formFeatures: {
+                        darkMode: false
+                    }
+                }
+            }, readyRemitSdkUrl);
+        }
+
+        setTimeout(() => {
+            initializeReadyRemitIFrame();
+        }, 1000);
+    </script>
+</body>
+
+</html>
